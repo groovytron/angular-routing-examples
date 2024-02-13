@@ -8,7 +8,8 @@
     "start:spinner": "nx serve spinner-example --port=4201",
     "start:guard": "nx serve guard-example --port=4202",
     "format": "nx format:write",
-    "lint": "nx run-many --all --target=lint"
+    "lint": "nx run-many --all --target=lint",
+    "nx": "nx"
   },
   "private": true,
   "dependencies": {
