@@ -1,0 +1,111 @@
+{
+  "name": "guard-example",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/guard-example/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/guard-example",
+        "index": "apps/guard-example/src/index.html",
+        "main": "apps/guard-example/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/guard-example/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "node_modules/@oblique/oblique/assets",
+            "output": "assets"
+          },
+          {
+            "glob": "*/**",
+            "input": "node_modules/@oblique/oblique/styles/fonts",
+            "output": "assets/fonts"
+          },
+          "apps/guard-example/src/assets"
+        ],
+        "styles": [
+          "node_modules/@oblique/oblique/styles/css/oblique-core.css",
+          "node_modules/@oblique/oblique/styles/css/roboto.css",
+          "apps/guard-example/src/styles.scss"
+        ],
+        "scripts": ["node_modules/@oblique/oblique/ob-features.js"]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "1.3mb",
+              "maximumError": "1.5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "3kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "guard-example:build:production"
+        },
+        "development": {
+          "browserTarget": "guard-example:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "proxyConfig": "proxy.conf.json"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "apps/guard-example/**/*.ts",
+          "apps/guard-example/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/guard-example/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nrwl/web:file-server",
+      "options": {
+        "buildTarget": "guard-example:build"
+      }
+    }
+  }
+}

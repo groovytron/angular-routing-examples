@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Please login</h2>
+<mat-dialog-content>
+  <p>
+    Pleas enter the correct password to go further. Otherwise you will not go
+    further.
+  </p>
+  <p>Psst ! The password is <b>secret</b> !</p>
+  <form [formGroup]="form" (submit)="authenticate()">
+    <mat-form-field appearance="fill">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" [formControl]="form.controls.password" />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="null" obButton="secondary">
+    Cancel
+  </button>
+  <button
+    mat-button
+    mat-dialog-close
+    obButton="primary"
+    (click)="authenticate()"
+  >
+    Login
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,8 @@
+<div *ngFor="let userItem of users" class="user-item">
+  <p>First name: {{ userItem.firstName }}</p>
+  <p>Last name: {{ userItem.lastName }}</p>
+  <p>
+    Email:
+    <a href="mailto:{{ userItem.email }}">{{ userItem.email }}</a>
+  </p>
+</div>

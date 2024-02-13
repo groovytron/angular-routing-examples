@@ -1,0 +1,5 @@
+<div>
+  <h1>Without Resolver</h1>
+  <ob-spinner [channel]="spinnerChannel"></ob-spinner>
+  <app-users-list [users]="(users | async) ?? []"> </app-users-list>
+</div>
