@@ -1,0 +1,60 @@
+BUILDDIR=build
+
+SLIDES=$(BUILDDIR)/slides.html
+PDF=$(BUILDDIR)/slides.pdf
+REVEALJS=node_modules/reveal.js
+DECKTAPE=node_modules/decktape
+METADATA=metadata.yaml
+
+.PHONY: all
+all: slides pdf
+
+.PHONY:slides
+slides: $(SLIDES)
+
+.PHONY:pdf
+pdf: $(PDF)
+
+.PHONY:watch
+watch:
+	@echo 'Building...' && \
+	make slides && \
+	fswatch \
+		--exclude=$(BUILDDIR) \
+		--one-per-batch \
+		. \
+	| \
+	xargs -I {} sh -c 'echo Change detected. Building... && make slides && echo Build finished'
+
+$(SLIDES): slides.md $(METADATA) $(REVEALJS) $(DECKTAPE) $(BUILDDIR)
+	pandoc $< \
+		--standalone \
+    --css styles.css \
+		--from markdown+smart \
+		--to revealjs \
+		--filter pandoc-crossref \
+		--citeproc \
+		--metadata-file=$(METADATA) \
+		--self-contained \
+		--variable revealjs-url=./$(REVEALJS) \
+		--variable theme="beige" \
+		--variable transition="none" \
+		--variable slideNumber="true" \
+		--variable showSlideNumber="true" \
+		--output $@
+
+$(PDF): $(SLIDES)
+	./node_modules/decktape/decktape.js \
+		--size='2048x1536' \
+		$(SLIDES) \
+		$(PDF)
+
+$(REVEALJS) $(DECKTAPE):
+	npm install
+
+$(BUILDDIR):
+	mkdir -p $(BUILDDIR)
+
+.PHONY: clean
+clean:
+	@rm -rf $(BUILDDIR)
