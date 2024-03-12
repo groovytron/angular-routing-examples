@@ -173,8 +173,8 @@ export class WithResolverComponent implements OnInit {
 
 ## Resolvers Advantages
 
-- If data retrieval fails, the navigation is canceled so that the users doesn't navigate to a component that will error because the needed data could not be fetched
-- it's useless to bring the user to a component that cannot be drawn because it doesn't have the data it needs to be rendered, right ?
+- If data retrieval fails, the navigation is canceled so that the users don't navigate to a component that will error because the needed data could not be fetched
+- It's useless to bring the user to a component that cannot be drawn because it doesn't have the data it needs to be rendered, right ?
 
 ---
 
@@ -253,7 +253,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 ## Conclusion
 
-- Resolvers helps developers to prefetch data from external sources
+- Resolvers help developers to prefetch data from external sources
 - Combined with a spinner, they smoothen the navigation for the user
 - They simplify components' logic and make them easier to test
 - Use them abondantly
