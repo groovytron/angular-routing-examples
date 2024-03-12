@@ -1,10 +1,28 @@
 # Plan
 
 - Introduction
+- What is a Route ?
+- Proper Routing
 - Angular Router's Lifecycle
 - Resolvers
+- Resolver Example
+- Live Demo
+- Resolvers Advantages
 - Spinner
+
+---
+
+## Plan
+
 - Guarding your Routes
+
+---
+
+## Introduction
+
+GitHub Repo: <https://github.com/groovytron/angular-routing-examples>
+
+Please prepare your questions during the presentation and ask them at the end of the presentation.
 
 ---
 
@@ -21,6 +39,8 @@ List the users from group with ID `777` sorted by name ascendently.
 - URLs that end-users can understand
 - the state is in the route
   - no need to use state most of the time
+  - all your app's pages are shareable through URLs
+    - helps for testing, bug reporting and reproducibility, etc.
 
 ---
 
@@ -63,7 +83,7 @@ Based on Angular's [documentation](https://angular.io/api/router/Event#descripti
 
 ---
 
-## Resolvers
+## Resolvers: TLDR
 
 It used to be injectable classes that implements the `Resolve<T>` interface but since Angular 16 they are functions implementing the `ResolveFn<T>` function signature.
 
@@ -73,18 +93,98 @@ It used to be injectable classes that implements the `Resolve<T>` interface but 
 
 ## Resolvers: example
 
+[Full example link](https://github.com/groovytron/angular-routing-examples/blob/main/apps/resolver-example/src/app/core/resolver/list-users.resolver.ts)
+
+```ts
+export const listUsersResolver: ResolveFn<User[]> = ():
+  | Observable<User[]>
+  | Promise<User[]>
+  | User[] => {
+  const userService = inject(UserService);
+
+  return userService.listUsers();
+};
+```
+
 ---
 
-## Resolvers: advantage
+## Resolvers: example
+
+[Full example link](https://github.com/groovytron/angular-routing-examples/blob/main/apps/resolver-example/src/app/app-routing.module.ts)
+
+```ts
+const withoutResolverUrl = 'without-resolver';
+
+const routes: Route[] = [
+  { path: withoutResolverUrl, component: WithoutResolverComponent },
+  {
+    path: 'with-resolver',
+    component: WithResolverComponent,
+    resolve: { users: listUsersResolver },
+  },
+  { path: '', pathMatch: 'full', redirectTo: withoutResolverUrl },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, {enableTracing: true})],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
+
+---
+
+## Resolvers: example
+
+[Full example link](https://github.com/groovytron/angular-routing-examples/blob/main/apps/resolver-example/src/app/components/with-resolver/with-resolver.component.ts)
+
+```ts
+@Component({
+  selector: 'app-with-resolver',
+  templateUrl: './with-resolver.component.html',
+  styleUrls: ['./with-resolver.component.css'],
+})
+export class WithResolverComponent implements OnInit {
+  users: User[] = [];
+
+  constructor(private activeRoute: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.users = this.activeRoute.snapshot.data['users'] as User[];
+  }
+}
+```
+
+---
+
+## Live Demo
+
+<a target="_blank" href="http://localhost:4200">http://localhost:4200</a>
+
+---
+
+## Resolvers Advantages
 
 - You don't need to do the HTTP calls in your components
 - When your component starts rendering the first time, the data is already there
 - The mess with asynchronous variables (aka `Observable`s) is reduced
-- If data retrieving fails, the navigation is canceled so that the users doesn't navigate to a component that will error because the needed data could not be fetched
 
 ---
 
-## Resolvers on steroids with a spinner
+## Resolvers Advantages
+
+- If data retrieval fails, the navigation is canceled so that the users doesn't navigate to a component that will error because the needed data could not be fetched
+- it's useless to bring the user to a component that cannot be drawn because it doesn't have the data it needs to be rendered, right ?
+
+---
+
+## Resolvers Advantages
+
+Components are simpler ⇨ components are easier to test !
+
+---
+
+## Resolvers on Steroids with a Spinner
 
 As the router emits some events, why not listening to it and display a spinner while some operations are pending ?
 
@@ -142,6 +242,28 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+---
+
+## Live Demo
+
+<a target="_blank" href="http://localhost:4201">http://localhost:4201</a>
+
+---
+
+## Conclusion
+
+- Resolvers helps developers to prefetch data from external sources
+- Combined with a spinner, they smoothen the navigation for the user
+- They simplify components' logic and make them easier to test
+- Use them abondantly
+
+---
+
+## Questions
+
+![](./images/questions.gif)
+
 
 ---
 
