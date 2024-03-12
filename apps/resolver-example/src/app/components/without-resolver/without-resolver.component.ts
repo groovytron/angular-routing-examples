@@ -20,12 +20,12 @@ export class WithoutResolverComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.users = this.userService.listUsers();
 
-    this.users.subscribe(() => {
-      this.spinner.deactivate(this.spinnerChannel);
-    });
+    // this.users.subscribe(() => {
+    //   this.spinner.deactivate(this.spinnerChannel);
+    // });
   }
 
   ngAfterViewInit(): void {
-    this.spinner.activate(this.spinnerChannel); // https://github.com/oblique-bit/oblique/issues/11
+    // this.spinner.activate(this.spinnerChannel); // https://github.com/oblique-bit/oblique/issues/11
   }
 }
